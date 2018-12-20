@@ -21,6 +21,18 @@ html
               a(href='/about') About
             li
               a(href='/contact') Contact
+            if user  
+              li.dropdown
+                a.dropdown-toggle(data-toggle='dropdown', href='#')
+                  | Admin access
+                  span.caret
+                ul.dropdown-menu
+                  li
+                    a(href='/administration/requests') Requests
+                  li
+                    a(href='#') Page 1-2
+                  li
+                    a(href='#') Page 1-3
           ul.nav.navbar-nav.navbar-right
             if user
               li

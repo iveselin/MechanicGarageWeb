@@ -30,10 +30,11 @@ router.get('/requests', (req, res) => {
     if (querySnapshot.empty) {
       console.log('No data');
     } else {
-      var data = querySnapshot.docs.map(function (documentSnapshot) {
-        console.log(documentSnapshot.data());
-        res.render('admin/requests', { data: documentSnapshot.data() });
+      var data = [];
+      querySnapshot.docs.map(doc => {
+        data.push(doc.data());
       });
+      res.render('admin/requests', { user: req.user, data: data });
     }
   })
 });

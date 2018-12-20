@@ -71,3 +71,6 @@ typings/
 
 # Serverless directories
 .serverless
+
+# firebase credentials
+model/firebase_cred.json

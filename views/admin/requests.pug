@@ -1,6 +1,13 @@
 extends ../layout
 
 block content 
-    each file in data
-        p 
-            file.extraNote
+    .container-fluid.text-center
+        .row.content
+            include ../includes/left_sidebar
+
+            .col-sm-8.text-left
+                each file, i in data
+                    p Data nr. #{i} #{file.extraNote} #{file.uid} 
+
+            include ../includes/right_sidebar
+        
