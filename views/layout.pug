@@ -1,0 +1,53 @@
+doctype html
+html
+ 
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='http://code.jquery.com/jquery.js')
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous")
+
+  body
+    .container-fluid
+      nav.navbar.navbar-inverse.navbar-static-top
+        .container-fluid
+          #navbar.navbar-collapse.collapse
+            ul.nav.navbar-nav
+              li.active
+                a(href="/index") Home 
+              li
+                a(href='#') About
+              li
+                a(href='#') Contact
+              li.dropdown
+                a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
+                  | Dropdown 
+                  span.caret
+                ul.dropdown-menu(role='menu')
+                  li
+                    a(href='asdf') Action
+                  li
+                    a(href='#') Another action
+                  li
+                    a(href='#') Something else here
+                  li.divider
+                  li.dropdown-header Nav header
+                  li
+                    a(href='#') Separated link
+                  li
+                    a(href='#') One more separated link
+            ul.nav.navbar-nav.navbar-right
+              if user
+                li
+                  a(href="/logout")
+                    | Logout
+              else
+                li
+                  a(href='/login')
+                    | Login 
+                    span.sr-only (current)
+
+    block content
+
