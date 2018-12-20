@@ -1,19 +1,41 @@
 var express = require('express');
 var router = express.Router();
-var passport = require('passport');
-var User = require('../model/User');
+var firebaseAdmin = require('firebase-admin');
 
-function ensureAuthenticated(req, res, next) {
+
+//auth checking middleware
+router.use((req, res, next) => {
   if (req.isAuthenticated()) {
-      return next();
+    return next();
   } else {
-      //req.flash('error_msg','You are not logged in');
-      res.redirect('../login');
+    //req.flash('error_msg','You are not logged in');
+    res.redirect('../login');
   }
-}
+});
 
-router.get('/', ensureAuthenticated, (req, res) => {
+router.get('/', (req, res) => {
   res.render('admin/admin', { title: 'Restricted Garage access', user: req.user });
+});
+
+//to be continued
+router.get('/workers', (req, res) => {
+  res.send("workers");
+});
+
+// gets the data, problem is showing it...
+router.get('/requests', (req, res) => {
+  var db = firebaseAdmin.firestore();
+  var requestsReference = db.collection('requests');
+  requestsReference.get().then((querySnapshot) => {
+    if (querySnapshot.empty) {
+      console.log('No data');
+    } else {
+      var data = querySnapshot.docs.map(function (documentSnapshot) {
+        console.log(documentSnapshot.data());
+        res.render('admin/requests', { data: documentSnapshot.data() });
+      });
+    }
+  })
 });
 
 module.exports = router;

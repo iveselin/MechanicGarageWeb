@@ -1,0 +1,38 @@
+extends layout
+
+block content
+    .container-fluid.text-center
+        .row.content
+            include includes/left_sidebar
+
+            .col-sm-8.text-left
+                h1 Offered services:
+                hr
+                h3
+                    ul.container.details
+                        li
+                            p
+                            span.one(style='width:50px;')
+                            | Basic car service
+                        li
+                            p
+                            span.one(style='width:50px;')
+                            | Car malfunction diagnostic and repair
+                        li
+                            p
+                            span.one(style='width:50px;')
+                            | Wheels and tyres work
+                        li
+                            p
+                            span.one(style='width:50px;')
+                            | In-house exhaust manufacturing and installation
+                        li
+                            p
+                            span.one(style='width:50px;')
+                            | etc.
+
+            .col-sm-2.sidenav
+                .well
+                    p ADS
+                .well
+                    p ADS

@@ -1,4 +1,8 @@
 extends layout
 
 block content
-  h1 SUPERPUBLIC  
+  .container-fluid.text-center
+    .row.content
+      include includes/left_sidebar
+      .col-sm-8.text-left
+      include includes/right_sidebar  

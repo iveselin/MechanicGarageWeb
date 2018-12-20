@@ -1,0 +1,36 @@
+extends layout
+
+block content
+    .container-fluid.text-center
+        .row.content
+            include includes/left_sidebar
+            
+            .col-sm-8.text-left
+                h1 Welcome
+                p
+                    | This is a garage founded in this year, working for that many years, we are proud to be this and that
+                hr
+                h3 Contact:
+                    ul.container.details
+                        li
+                            p
+                            span.glyphicon.glyphicon-earphone.one(style='width:50px;')
+                            | 098/098-0988
+                        li
+                            p
+                            span.glyphicon.glyphicon-envelope.one(style='width:50px;')
+                            | garage@email.hr
+                        li
+                            p
+                            span.glyphicon.glyphicon-map-marker.one(style='width:50px;')
+                            | GarageLocation 22, 80000 GarageLocation, Croatia
+                        li
+                            p
+                            span.glyphicon.glyphicon-tag.one(style='width:50px;')
+                            a(href='//www.facebook.com/garagename') Our facebook page
+            
+            include includes/right_sidebar
+
+            
+
+    

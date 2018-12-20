@@ -58,6 +58,14 @@ router.route('/register')
         }
     });
 
+router.get('/about', (req, res) => {
+    res.render('about', { title: 'Basic info', user: req.user });
+});
+
+router.get('/contact', (req, res) => {
+    res.render('contact', { title: 'Contact info', user: req.user });
+});
+
 
 //logout request handling
 router.get('/logout', function (req, res) {

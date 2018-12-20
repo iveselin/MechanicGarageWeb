@@ -9,6 +9,7 @@ var mongoose = require('mongoose');
 var LocalStrategy = require('passport-local').Strategy;
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
+var firebaseAdmin = require('firebase-admin');
 
 
 var app = express();
@@ -43,6 +44,12 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+//seting up firestore
+var serviceAccount = require('./model/firebase_cred.json');
+firebaseAdmin.initializeApp({
+  credential: firebaseAdmin.credential.cert(serviceAccount),
+  databaseURL: "https://mechanicgarage-6fdfa.firebaseio.com"
+});
 
 //setting routes
 app.use('/', indexRouter);
