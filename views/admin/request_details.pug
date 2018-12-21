@@ -1,0 +1,15 @@
+extends ../layout
+
+block content 
+    .container-fluid.text-center
+        .row.content
+            include ../includes/left_sidebar
+
+            .col-sm-8.text-left
+                h3 Car owner: #{data.uid}
+                    p #{data.extraNote}
+                    p Work needed:
+                        each request in data.requestType
+                            p #{request}
+                                                                    
+            include ../includes/right_sidebar

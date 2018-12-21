@@ -7,7 +7,8 @@ block content
 
             .col-sm-8.text-left
                 each file, i in data
-                    p Data nr. #{i} #{file.extraNote} #{file.uid} 
+                    a(href="/administration/requests/"+file.object_id) Data nr. #{i} #{file.extraNote} #{file.object_id}
+                    hr  
 
             include ../includes/right_sidebar
         

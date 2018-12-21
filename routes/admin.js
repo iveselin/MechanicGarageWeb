@@ -3,10 +3,11 @@ var router = express.Router();
 var firebaseAdmin = require('firebase-admin');
 
 
+
 //auth checking middleware
 router.use((req, res, next) => {
   if (req.isAuthenticated()) {
-    return next();
+    next();
   } else {
     //req.flash('error_msg','You are not logged in');
     res.redirect('../login');
@@ -22,21 +23,58 @@ router.get('/workers', (req, res) => {
   res.send("workers");
 });
 
-// gets the data, problem is showing it...
+//get all pending requests(add pending part)
 router.get('/requests', (req, res) => {
   var db = firebaseAdmin.firestore();
   var requestsReference = db.collection('requests');
-  requestsReference.get().then((querySnapshot) => {
-    if (querySnapshot.empty) {
-      console.log('No data');
-    } else {
-      var data = [];
-      querySnapshot.docs.map(doc => {
-        data.push(doc.data());
-      });
-      res.render('admin/requests', { user: req.user, data: data });
-    }
-  })
+  
+  requestsReference.get()
+    .then((querySnapshot) => {
+      if (querySnapshot.empty) {
+        console.log('No data');
+      } else {
+        var data = [];
+        querySnapshot.docs.map(doc => {
+          var dataobject = doc.data();
+          dataobject.object_id = doc.id;
+          data.push(dataobject);
+        });
+
+        res.render('admin/requests', {
+          user: req.user,
+          data: data,
+          title: 'Zahtjevi'
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
+
+
+//gets the data of clicked job_request by position, try to find doc Id and then query the data
+router.get('/requests/:id', (req, res, next) => {
+  var db = firebaseAdmin.firestore();
+  var requestsReference = db.collection('requests');
+
+  requestsReference.doc(req.params.id).get()
+    .then(doc => {
+      if (!doc.exists) {
+        console.log('No such document!');
+        return next(new Error('No such document'));
+      } else {
+        res.render('admin/request_details', {
+          user: req.user,
+          data: doc.data(),
+          title: 'Zahtjev ' + req.params.id
+        });
+      }
+    })
+    .catch(err => {
+      console.log('Error getting document', err);
+      return next(err);
+    });
 });
 
 module.exports = router;
