@@ -1,18 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var firebaseAdmin = require('firebase-admin');
-
+var administration_controller = require('../controllers/administrationController');
 
 
 //auth checking middleware
-router.use((req, res, next) => {
-  if (req.isAuthenticated()) {
-    next();
-  } else {
-    //req.flash('error_msg','You are not logged in');
-    res.redirect('../login');
-  }
-});
+router.use(administration_controller.auth_check);
 
 router.get('/', (req, res) => {
   res.render('admin/admin', { title: 'Restricted Garage access', user: req.user });
@@ -27,7 +20,7 @@ router.get('/workers', (req, res) => {
 router.get('/requests', (req, res) => {
   var db = firebaseAdmin.firestore();
   var requestsReference = db.collection('requests');
-  
+
   requestsReference.get()
     .then((querySnapshot) => {
       if (querySnapshot.empty) {

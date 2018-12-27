@@ -1,26 +1,14 @@
 var express = require('express');
 var router = express.Router();
-var passport = require('passport');
-var User = require('../model/User');
+var index_controller = require('../controllers/indexCotroller');
 
 //homepage route(no auth needed)
-router.get(['/', '/index'], (req, res) => {
-    res.render('index', { title: 'Garage homepage', user: req.user });
-});
+router.get(['/', '/index'], index_controller.index);
 
 //login routes
 router.route('/login')
-
-    .get((req, res) => {
-        res.render('login', { title: "Garage sign-in page", user: req.user });
-    })
-
-    .post(passport.authenticate('local'), (req, res) => {
-        res.redirect('/administration/');
-    });
-
-
-
+    .get(index_controller.login_get)
+    .post(index_controller.login_post);
 
 //register routes ----> should move to administration
 router.route('/register')
@@ -58,19 +46,11 @@ router.route('/register')
         }
     });
 
-router.get('/about', (req, res) => {
-    res.render('about', { title: 'Basic info', user: req.user });
-});
+router.get('/about', index_controller.about_get);
 
-router.get('/contact', (req, res) => {
-    res.render('contact', { title: 'Contact info', user: req.user });
-});
-
+router.get('/contact', index_controller.contact_get);
 
 //logout request handling
-router.get('/logout', function (req, res) {
-    req.logout();
-    res.redirect('/index');
-});
+router.get('/logout', index_controller.logout_get);
 
 module.exports = router;
