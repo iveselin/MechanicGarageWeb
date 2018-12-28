@@ -9,6 +9,8 @@ block content
                 each file, i in data
                     a(href="/administration/requests/"+file.object_id) Data nr. #{i} #{file.extraNote} #{file.object_id}
                     hr  
-
+                else
+                    h3 No data
+                    
             include ../includes/right_sidebar
         
