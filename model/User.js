@@ -4,7 +4,12 @@ var passportLocalMongoose = require('passport-local-mongoose');
 
 var UserSchema = new Schema({
 	username: String,
-	password: String
+	password: String,
+	role: {
+		type: String,
+		enum: ['owner','worker'],
+		default:'worker'
+	}
 });
 
 UserSchema.plugin(passportLocalMongoose);

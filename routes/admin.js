@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var firebaseAdmin = require('firebase-admin');
 var administration_controller = require('../controllers/administrationController');
-
 
 //auth checking middleware
 router.use(administration_controller.auth_check);
@@ -14,11 +12,16 @@ router.get('/workers', (req, res) => {
   res.send("workers");
 });
 
-//get all pending requests(add pending part)
+//get all pending requests
 router.get('/requests', administration_controller.requests_get);
 
 
-//gets the data of clicked job_request by position, try to find doc Id and then query the data
+//gets the data of clicked job_request by id
 router.get('/requests/:id', administration_controller.request_by_Id_get);
+
+//register routes 
+router.route('/register')
+  .get(administration_controller.register_worker_get)
+  .post(administration_controller.register_worker_post);
 
 module.exports = router;

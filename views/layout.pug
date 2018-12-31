@@ -21,7 +21,7 @@ html
               a(href='/about') About
             li
               a(href='/contact') Contact
-            if user  
+            if (user && user.role == "owner")
               li.dropdown
                 a.dropdown-toggle(data-toggle='dropdown', href='#')
                   | Admin access
@@ -30,7 +30,17 @@ html
                   li
                     a(href='/administration/requests') Requests
                   li
-                    a(href='#') Page 1-2
+                    a(href='/administration/register') Register new worker
+                  li
+                    a(href='#') Page 1-3
+            else if user
+              li.dropdown
+                a.dropdown-toggle(data-toggle='dropdown', href='#')
+                  | Worker access
+                  span.caret
+                ul.dropdown-menu
+                  li
+                    a(href='/administration/requests') Requests
                   li
                     a(href='#') Page 1-3
           ul.nav.navbar-nav.navbar-right

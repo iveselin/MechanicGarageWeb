@@ -5,11 +5,18 @@ block content
         .row.content
             //-include ../includes/left_sidebar
 
-            .col-sm-8.text-left
-                h4 Car owner: #{data.uid}
-                    p #{data.extraNote}
+            .col-sm-5.text-left
+                h4 Car owner: #{client.name}
+                    p #{client.phone}
+                    p Car info:
+                        each data in client.car
+                            p #{data}
+            .col-sm-5.text-left
+                h4 Work request:
+                    p #{request.extraNote}
                     p Work needed:
-                        each request in data.requestType
-                            p #{request}
-                                                                    
+                        each data in request.requestType
+                            p #{data}
+                    
+
             //-include ../includes/right_sidebar

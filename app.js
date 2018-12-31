@@ -9,6 +9,7 @@ var mongoose = require('mongoose');
 var LocalStrategy = require('passport-local').Strategy;
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
+var workerRouter = require('./routes/worker');
 var firebaseAdmin = require('firebase-admin');
 
 
@@ -26,7 +27,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-mongoose.connect('mongodb://iveselin:fanta99@ds139614.mlab.com:39614/garage_administration');
+mongoose.connect('mongodb://iveselin:fanta99@ds139614.mlab.com:39614/garage_administration', { useNewUrlParser: true});
 
 app.use(require('express-session')({
   secret: 'secret',
@@ -54,6 +55,7 @@ firebaseAdmin.initializeApp({
 //setting routes
 app.use('/', indexRouter);
 app.use('/administration', adminRouter);
+app.use('/worker', workerRouter);
 
 
 
