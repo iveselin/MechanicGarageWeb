@@ -120,3 +120,25 @@ exports.request_by_Id_get = (req, res, next) => {
         });
 }
 
+exports.schedule_get = (req, res) => {
+    res.render('admin/schedule', { user: req.user, title: 'Raspored' });
+}
+
+exports.schedule_post = (req, res, next) => {
+    var data = req.body;
+    console.log(data);
+
+    data = JSON.parse(JSON.stringify(data));
+
+    const db = firebaseAdmin.firestore();
+    const scheduleReference = db.collection('schedule');
+
+    scheduleReference.doc().set(data, { merge: true })
+        .then(ref => {
+            console.log("added doc with ref" + ref);
+            res.redirect("/administration");
+        })
+        .catch(err => {
+            return next(err);
+        })
+}

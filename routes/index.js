@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var index_controller = require('../controllers/indexCotroller');
+var index_controller = require('../controllers/indexController');
 
 //homepage route(no auth needed)
 router.get(['/', '/index'], index_controller.index);
