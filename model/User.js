@@ -9,7 +9,10 @@ var UserSchema = new Schema({
 		type: String,
 		enum: ['owner','worker'],
 		default:'worker'
-	}
+	},
+	tasks: [{
+		type:String
+	}]
 });
 
 UserSchema.plugin(passportLocalMongoose);

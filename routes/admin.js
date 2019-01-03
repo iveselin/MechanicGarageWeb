@@ -7,22 +7,21 @@ router.use(administration_controller.auth_check);
 
 router.get('/', administration_controller.admin_index);
 
-//to be continued
-router.get('/workers', (req, res) => {
-  res.send("workers");
-});
-
 //get all pending requests
 router.get('/requests', administration_controller.requests_get);
 
 //gets the data of clicked job_request by id
-router.get('/requests/:id', administration_controller.request_by_Id_get);
+router.route('/requests/:id')
+  .get(administration_controller.request_by_Id_get)
+  //assigning a worker to request
+  .post(administration_controller.request_by_Id_post);
 
 //register routes 
 router.route('/register')
   .get(administration_controller.register_worker_get)
   .post(administration_controller.register_worker_post);
 
+//schedule routes
 router.route('/schedule')
   .get(administration_controller.schedule_get)
   .post(administration_controller.schedule_post);

@@ -22,6 +22,10 @@ footer {
   padding: 15px;
 }
 
+.checkbox-inline{
+  margin-left:15px;
+}
+
 /* On small screens, set height to 'auto' for sidenav and grid */
 @media screen and (max-width: 767px) {
   .sidenav {

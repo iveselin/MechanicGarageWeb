@@ -3,20 +3,29 @@ extends ../layout
 block content 
     .container-fluid.text-center
         .row.content
-            //-include ../includes/left_sidebar
-
-            .col-sm-5.text-left
-                h4 Car owner: #{client.name}
-                    p #{client.phone}
-                    p Car info:
-                        each data in client.car
-                            p #{data}
             .col-sm-5.text-left
                 h4 Work request:
                     p #{request.extraNote}
                     p Work needed:
                         each data in request.requestType
                             p #{data}
-                    
-
-            //-include ../includes/right_sidebar
+                    if !request.worker
+                        hr
+                        form(method = 'POST', action='')
+                            .form-group  
+                                label(for="worker_select") Dodjeli radnika
+                                select#worker_select.form-control(name="worker")
+                                    each worker in workers 
+                                        option(value=worker._id) #{worker.username}
+                            .form-group
+                                button.btn.btn-info(type = 'submit') Dodjeli radnika
+                    else 
+                        hr
+                        p.font-weight-bold Radnik dodijeljen
+            .col-sm-5.text-left
+                h4 Car owner: #{client.name}
+                    p #{client.phone}
+                    p Car info:
+                        each data in client.car
+                            p #{data}
+            

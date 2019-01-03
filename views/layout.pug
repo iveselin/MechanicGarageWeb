@@ -37,16 +37,9 @@ html
                     a(href='/administration/register') Register new worker
                   li
                     a(href='/administration/schedule') Raspored
-            else if user
-              li.dropdown
-                a.dropdown-toggle(data-toggle='dropdown', href='#')
-                  | Worker access
-                  span.caret
-                ul.dropdown-menu
-                  li
-                    a(href='/administration/requests') Requests
-                  li
-                    a(href='#') Page 1-3
+            if user
+              li
+                a(href='/worker') Worker
           ul.nav.navbar-nav.navbar-right
             if user
               li

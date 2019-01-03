@@ -1,4 +1,4 @@
-var passport = require('passport');
+const passport = require('passport');
 
 exports.index = (req, res) => {
     res.render('index', { title: 'Garage homepage', user: req.user });

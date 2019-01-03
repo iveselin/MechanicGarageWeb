@@ -22,7 +22,7 @@ exports.register_worker_get = (req, res) => {
 };
 
 //additional worker registration request process
-exports.register_worker_post = (req, res, next) => {
+exports.register_worker_post = async (req, res, next) => {
     var email = req.body.username;
     var password = req.body.password;
 
@@ -39,106 +39,112 @@ exports.register_worker_post = (req, res, next) => {
         });
 
     } else {
-        User.register(
-            new User({ username: email }), password, (err, user) => {
-                if (err) {
-                    console.log(err);
-                    return res.render('register', { user: req.user });
-                } else {
-                    res.redirect('/administration');
-                }
-            });
+        try {
+            await User.register(new User({ username: email }), password);
+            res.redirect('/administration');
+        } catch (err) {
+            return next(err);
+        }
     }
 };
 
-exports.requests_get = (req, res, next) => {
-    var db = firebaseAdmin.firestore();
-    var requestsReference = db.collection('requests');
-    var data = [];
+exports.requests_get = async (req, res, next) => {
+    const db = firebaseAdmin.firestore();
+    const requestsReference = db.collection('requests');
+    const data = [];
 
-    requestsReference.get()
-        .then((querySnapshot) => {
-            if (querySnapshot.empty) {
-                console.log('No data');
-            } else {
-                querySnapshot.docs.map(doc => {
-                    var dataobject = doc.data();
-                    dataobject.object_id = doc.id;
-                    data.push(dataobject);
-                });
-            }
-            res.render('admin/requests', {
-                user: req.user,
-                data: data,
-                title: 'Zahtjevi'
-            });
-        })
-
-        .catch((error) => {
-            console.log(error);
-            return next(error);
+    try {
+        const snapshot = await requestsReference.where('done', '==', false).get();
+        if (snapshot.empty) {
+            console.log('No data');
+        } else {
+            snapshot.docs.map(doc => {
+                let dataobject = doc.data();
+                dataobject.object_id = doc.id;
+                data.push(dataobject);
+            })
+        }
+        res.render('admin/requests', {
+            user: req.user,
+            data: data,
+            title: 'Zahtjevi'
         });
+
+    } catch (error) {
+        console.log(error);
+        return next(error);
+    }
 }
 
-exports.request_by_Id_get = (req, res, next) => {
+exports.request_by_Id_get = async (req, res, next) => {
     const db = firebaseAdmin.firestore();
     const requestsReference = db.collection('requests');
     const usersReference = db.collection('users');
 
-    var requetsData;
+    try {
+        const workers = User.find().exec();
+        const requestDoc = await requestsReference.doc(req.params.id).get();
+        if (!requestDoc.exists) {
+            return next(new Error('No Such Doc'));
+        }
+        const requestData = requestDoc.data();
 
-    requestsReference.doc(req.params.id).get()
-        .then(doc => {
-            if (!doc.exists) {
-                console.log('No such document!');
-                return next(new Error('No such document'));
-            } else {
-                requetsData = doc.data();
-                usersReference.doc(requetsData.uid).get()
-                    .then(doc => {
-                        if (!doc.exists) {
-                            console.log('No such document!');
-                            return next(new Error('No such document'));
-                        } else {
-                            res.render('admin/request_details', {
-                                user: req.user,
-                                request: requetsData,
-                                client: doc.data(),
-                                title: 'Zahtjev ' + req.params.id
-                            });
-                        }
-                    })
-                    .catch(err => {
-                        console.log('Error getting document', err);
-                        return next(err);
-                    });
-            }
-        })
-        .catch(err => {
-            console.log('Error getting document', err);
-            return next(err);
+        const userDoc = await usersReference.doc(requestData.uid).get();
+        if (!userDoc.exists) {
+            return next(new Error('No such file'));
+        }
+        const userData = userDoc.data();
+
+        res.render('admin/request_details', {
+            user: req.user,
+            request: requestData,
+            client: userData,
+            workers: await workers,
+            title: 'Zahtjev ' + req.params.id
         });
+
+    } catch (error) {
+        console.log(error);
+        return next(error);
+    }
+}
+
+exports.request_by_Id_post = async (req, res, next) => {
+    const db = firebaseAdmin.firestore();
+    const requestsReference = db.collection('requests');
+
+    const workerId = req.body.worker;
+    const taskId = req.params.id;
+
+    try {
+        const workerQ = User.findByIdAndUpdate(workerId, {
+            $push: { tasks: taskId }
+        }).exec();
+
+        const taskQ = requestsReference.doc(taskId).update({ worker: workerId });
+
+        const results = [await workerQ, await taskQ];
+        res.redirect('/administration/requests');
+
+    } catch (error) {
+        return next(error);
+    }
 }
 
 exports.schedule_get = (req, res) => {
     res.render('admin/schedule', { user: req.user, title: 'Raspored' });
 }
 
-exports.schedule_post = (req, res, next) => {
-    var data = req.body;
-    console.log(data);
-
-    data = JSON.parse(JSON.stringify(data));
-
+exports.schedule_post = async (req, res, next) => {
     const db = firebaseAdmin.firestore();
     const scheduleReference = db.collection('schedule');
 
-    scheduleReference.doc().set(data, { merge: true })
-        .then(ref => {
-            console.log("added doc with ref" + ref);
-            res.redirect("/administration");
-        })
-        .catch(err => {
-            return next(err);
-        })
+    const data = JSON.parse(JSON.stringify(req.body));
+    
+    try {
+        await scheduleReference.doc().set(data);
+        res.redirect("/administration");
+    } catch (error) {
+        return next(error);
+    }
 }

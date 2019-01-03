@@ -17,9 +17,8 @@ block head
                     var firstDate = moment(value, "DD/MM/YYYY").day(1).format("DD.MM.YYYY");
                     var lastDate =  moment(value, "DD/MM/YYYY").day(5).format("DD.MM.YYYY");
                     $("#weekPicker").val(firstDate + " - " + lastDate);
-
+                    
                     for (var i = 1; i<6; i++){
-                        console.log(i);
                         var text = moment(value, "DD/MM/YYYY").day(i).format("DD.MM.YYYY");
                         $("#day"+i).text(text);
                         
@@ -29,33 +28,32 @@ block head
 
 
 block content 
-    .container-fluid.text-center
-        .row.content
-            include ../includes/left_sidebar
+    
+    .container
+        h4 Napravi novi raspored
+        form.form-horizontal(method='POST' action='/administration/schedule')
 
-            .col-sm-8.text-left
-                h4 Napravi novi raspored
-                form(method='POST' action='/administration/schedule')
+            .form-group.row
+                .col-sm-offset-2.col-sm-6
+                    input.form-control(type= 'text', id = 'weekPicker', name = "week", placeholder='select a week')
 
-                    .form-group-row
-                        .col-sm-8
-                            input.form-control(type= 'text', id = 'weekPicker', name = "week", placeholder='select a week')
+            -var days=['mon','tue','wen','thu','fri']
+            -var timeSlots = [8,9,10,11,13,14,15,16]
+            each day,i in days
+                hr
+                .form-group.row
+                    .col-sm-2
+                        label.label-text(id = 'day'+(i+1)) 
+                    .col-sm-6
+                        each slot in timeSlots    
+                            label.checkbox-inline.control-label 
+                                input(type='checkbox', value=slot, name = day) 
+                                |   #{slot} 
 
-                    -var days=['mon','tue','wen','thu','fri']
-                    -var timeSlots = [8,9,10,11,13,14,15,16]
-                    each day,i in days
-                        .form-group-row
-                            .col-sm-2
-                                label.label-text(id = 'day'+(i+1)) 
-                            .col-sm-6
-                                each slot in timeSlots    
-                                    label.checkbox-inline #{slot}
-                                        input(type='checkbox', value=slot, name = day) 
-
-                    .form-group-row
-                        .col-sm-8
-                            button.btn.btn-info(type='submit') Spremi raspored
+            .form-group.row
+                .col-sm-offset-2.col-sm-6
+                    button.btn.btn-info(type='submit', id='submit') Spremi raspored
+                
             
-            include ../includes/right_sidebar
 
     

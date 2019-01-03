@@ -1,0 +1,17 @@
+extends ../layout
+
+block content 
+    .container-fluid.text-center
+        .row.content
+            include ../includes/left_sidebar
+
+            .col-sm-8.text-left
+                h4 Zadani posao:
+                each file, i in data
+                    a(href="/worker/tasks/"+file) Data nr. #{i}: #{file} 
+                    hr  
+                else
+                    h3 No data
+                    
+            include ../includes/right_sidebar
+        

@@ -27,7 +27,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-mongoose.connect('mongodb://iveselin:fanta99@ds139614.mlab.com:39614/garage_administration', { useNewUrlParser: true});
+mongoose.connect('mongodb://iveselin:fanta99@ds139614.mlab.com:39614/garage_administration', { useNewUrlParser: true });
+mongoose.Promise = global.Promise;
 
 app.use(require('express-session')({
   secret: 'secret',
