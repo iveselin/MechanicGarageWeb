@@ -7,6 +7,9 @@
     "dev": "nodemon --exec babel-node -- ./bin/www",
     "test": "jest --coverage"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "dependencies": {
     "babel-cli": "^6.26.0",
     "bcrypt": "^3.0.2",
@@ -34,7 +37,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "jest": "^23.6.0",
-    "nodemon": "^1.18.3",
+    "nodemon": "^1.18.9",
     "superagent": "^4.1.0",
     "supertest": "^3.3.0"
   }
