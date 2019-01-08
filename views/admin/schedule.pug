@@ -17,11 +17,19 @@ block head
                     var firstDate = moment(value, "DD/MM/YYYY").day(1).format("DD.MM.YYYY");
                     var lastDate =  moment(value, "DD/MM/YYYY").day(5).format("DD.MM.YYYY");
                     $("#weekPicker").val(firstDate + " - " + lastDate);
-                    
+
+                    $(':input[type="submit"]').prop('disabled', false);
+
                     for (var i = 1; i<6; i++){
                         var text = moment(value, "DD/MM/YYYY").day(i).format("DD.MM.YYYY");
                         $("#day"+i).text(text);
-                        
+                    }
+                    var timeSlots = [8,9,10,11,13,14,15,16];
+                    for(i = 1; i<6; i++){
+                        for(var j = 0; j<timeSlots.length; j++){
+                            var valueText = moment(value, "DD/MM/YYYY").day(i).add(timeSlots[j], 'hours').unix();
+                            $('#day'+i+'slot'+timeSlots[j]).attr("value", valueText);
+                        }
                     }
                 });
             });
@@ -31,6 +39,9 @@ block content
     
     .container
         h4 Napravi novi raspored
+        if error   
+            .alert.alert-warning
+                p #{error}
         form.form-horizontal(method='POST' action='/administration/schedule')
 
             .form-group.row
@@ -47,12 +58,12 @@ block content
                     .col-sm-6
                         each slot in timeSlots    
                             label.checkbox-inline.control-label 
-                                input(type='checkbox', value=slot, name = day) 
+                                input(type='checkbox', id='day'+(i+1)+'slot'+slot , name = 'days') 
                                 |   #{slot} 
 
             .form-group.row
                 .col-sm-offset-2.col-sm-6
-                    button.btn.btn-info(type='submit', id='submit') Spremi raspored
+                    button.btn.btn-info(type='submit', id='submit', disabled='') Spremi raspored
                 
             
 

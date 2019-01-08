@@ -43,6 +43,8 @@ describe('Test of workerController', () => {
     })
 
     test('Worker index - GET', () => {
+
+        //TODO create a test DB and clean it before, enter new mockuser and query it in test... check with mocked user 
         const mockedQuery = jest.spyOn(User, 'findById').mockImplementation((id) => {
             const exec = jest.fn(() => Promise.resolve(mockUser));
             const docQ = {
@@ -68,7 +70,7 @@ describe('Test of workerController', () => {
 
         workerController.worker_index(req, res, next);
 
-        expect(render).toBeCalled();
+        expect(render.mock.calls).toHaveLength(1);
     })
 
 

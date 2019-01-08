@@ -23,22 +23,21 @@ exports.register_worker_get = (req, res) => {
 
 //additional worker registration request process
 exports.register_worker_post = async (req, res, next) => {
-    var email = req.body.username;
-    var password = req.body.password;
-
     // Validation
     req.checkBody('username', 'Email is required').notEmpty();
     req.checkBody('username', 'Email is not valid').isEmail();
     req.checkBody('password', 'Password is required').notEmpty();
     req.checkBody('password2', 'Passwords do not match').equals(password);
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
     if (errors) {
         res.render('register', {
             errors: errors
         });
 
     } else {
+        const email = req.body.username;
+        const password = req.body.password;
         try {
             await User.register(new User({ username: email }), password);
             res.redirect('/administration');
@@ -48,6 +47,7 @@ exports.register_worker_post = async (req, res, next) => {
     }
 };
 
+//renders a list of all pending requests
 exports.requests_get = async (req, res, next) => {
     const db = firebaseAdmin.firestore();
     const requestsReference = db.collection('requests');
@@ -76,6 +76,7 @@ exports.requests_get = async (req, res, next) => {
     }
 }
 
+//renders request details and with list of availible workers to select from
 exports.request_by_Id_get = async (req, res, next) => {
     const db = firebaseAdmin.firestore();
     const requestsReference = db.collection('requests');
@@ -109,6 +110,7 @@ exports.request_by_Id_get = async (req, res, next) => {
     }
 }
 
+//dedicating a worker to request
 exports.request_by_Id_post = async (req, res, next) => {
     const db = firebaseAdmin.firestore();
     const requestsReference = db.collection('requests');
@@ -131,19 +133,48 @@ exports.request_by_Id_post = async (req, res, next) => {
     }
 }
 
+//rendering a page for schedule making
 exports.schedule_get = (req, res) => {
     res.render('admin/schedule', { user: req.user, title: 'Raspored' });
 }
 
+//storing selected schedule slots in form of unix timestamps
 exports.schedule_post = async (req, res, next) => {
+    //TODO: validate fields of req to see if they exist and if they are array
+    req.checkBody('days').exists();
+    req.checkBody('days').isArray();
+    req.checkBody('week').exists();
+
+    const errors = req.validationErrors();
+    if (errors) {
+        res.render('admin/schedule', {
+            errors: errors
+        });
+    }
+
     const db = firebaseAdmin.firestore();
     const scheduleReference = db.collection('schedule');
-
-    const data = JSON.parse(JSON.stringify(req.body));
-    
+    const data = JSON.parse(JSON.stringify(req.body.days));
+    const week = req.body.week;
     try {
-        await scheduleReference.doc().set(data);
-        res.redirect("/administration");
+        const currentData = await scheduleReference.where('week', "==", week).limit(1).get();
+        if (!currentData.empty) {
+            res.render('admin/schedule', { user: req.user, title: 'Raspored', error: `Tjedan ${week} je vec spremljen` });
+        }
+    } catch (error) {
+        return next(error);
+    }
+
+    let docReference;
+    const batchWrite = db.batch();
+    data.forEach(timestamp => {
+        docReference = scheduleReference.doc();
+        batchWrite.set(docReference, { time: timestamp, week: week });
+    });
+
+    try {
+        await batchWrite.commit();
+        res.redirect('/administration');
     } catch (error) {
         return next(error);
     }
