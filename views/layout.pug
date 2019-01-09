@@ -14,43 +14,45 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     block head
   body
-    nav.navbar.navbar-inverse.navbar-expand-lg
-        //-button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
-          span.navbar-toggler-icon
-        #navbarSupportedContent.collapse.navbar-collapse
-          ul.nav.navbar-nav.mr-auto
-            li.active
-              a(href="/index") Home 
+    nav.navbar.navbar-inverse.navbar-expand-md
+      button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarToggler', aria-controls='navbarToggler', aria-expanded='false', aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+      #navbarToggler.collapse.navbar-collapse
+        ul.nav.navbar-nav
+          li
+            a(href="/index") Home 
+          li
+            a(href='/about') About
+          li
+            a(href='/contact') Contact
+          if (user && user.role == "owner")
+            li.dropdown
+              a.dropdown-toggle(data-toggle='dropdown', href='#')
+                | Admin access
+                span.caret
+              ul.dropdown-menu
+                li
+                  a(href='/administration/requests') Pending requests
+                li
+                  a(href='/administration/week') This week status
+                li
+                  a(href='/administration/register') Register new worker
+                li
+                  a(href='/administration/schedule') Raspored
+          if user
             li
-              a(href='/about') About
+              a(href='/worker') Worker
+        ul.nav.navbar-nav.navbar-right
+          if user
             li
-              a(href='/contact') Contact
-            if (user && user.role == "owner")
-              li.dropdown
-                a.dropdown-toggle(data-toggle='dropdown', href='#')
-                  | Admin access
-                  span.caret
-                ul.dropdown-menu
-                  li
-                    a(href='/administration/requests') Requests
-                  li
-                    a(href='/administration/register') Register new worker
-                  li
-                    a(href='/administration/schedule') Raspored
-            if user
-              li
-                a(href='/worker') Worker
-          ul.nav.navbar-nav.navbar-right
-            if user
-              li
-                a(href="/logout")
-                  span.glyphicon.glyphicon-log-out
-                  |   Logout
-            else
-              li
-                a(href='/login')
-                  span.glyphicon.glyphicon-log-in
-                  |   Login 
+              a(href="/logout")
+                span.glyphicon.glyphicon-log-out
+                |   Logout
+          else
+            li
+              a(href='/login')
+                span.glyphicon.glyphicon-log-in
+                |   Login 
 
     block content
 

@@ -1,6 +1,7 @@
 const firebaseAdmin = require('firebase-admin');
 const User = require('../model/User');
 
+//auth check middleware
 exports.auth_check = (req, res, next) => {
     if (req.isAuthenticated()) {
         return next();
@@ -10,6 +11,7 @@ exports.auth_check = (req, res, next) => {
     }
 };
 
+//renders worker index with a list of assigned tasks
 exports.worker_index = (req, res, next) => {
     User.findById(req.user._id).exec()
         .then(user => {
@@ -20,6 +22,7 @@ exports.worker_index = (req, res, next) => {
         })
 }
 
+//render task details of selected task
 exports.task_by_id_get = async (req, res, next) => {
     const db = firebaseAdmin.firestore();
     const requestsReference = db.collection('requests');
@@ -47,6 +50,7 @@ exports.task_by_id_get = async (req, res, next) => {
     }
 }
 
+//handle request to mark task as done -> remove from workers list and update in firestore
 exports.task_by_id_post = async (req, res, next) => {
     const db = firebaseAdmin.firestore();
     const requestsReference = db.collection('requests');
@@ -62,7 +66,6 @@ exports.task_by_id_post = async (req, res, next) => {
         const requestQ = requestsReference.doc(taskId).update({ done: true });
 
         const results = [await workerQ, await requestQ];
-        console.log(results);
         res.redirect('/worker');
 
     } catch (error) {

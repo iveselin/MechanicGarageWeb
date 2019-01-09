@@ -1,5 +1,6 @@
 const firebaseAdmin = require('firebase-admin');
 const User = require('../model/User');
+const moment = require('moment');
 
 //auth checking middleware
 exports.auth_check = (req, res, next) => {
@@ -47,14 +48,14 @@ exports.register_worker_post = async (req, res, next) => {
     }
 };
 
-//renders a list of all pending requests
+//renders a list of all pending requests without assigned workers
 exports.requests_get = async (req, res, next) => {
     const db = firebaseAdmin.firestore();
     const requestsReference = db.collection('requests');
     const data = [];
 
     try {
-        const snapshot = await requestsReference.where('done', '==', false).get();
+        const snapshot = await requestsReference.where('worker', '==', null).get();
         if (snapshot.empty) {
             console.log('No data');
         } else {
@@ -64,6 +65,7 @@ exports.requests_get = async (req, res, next) => {
                 data.push(dataobject);
             })
         }
+        data.sort((a, b) => { return a.time - b.time });
         res.render('admin/requests', {
             user: req.user,
             data: data,
@@ -140,22 +142,27 @@ exports.schedule_get = (req, res) => {
 
 //storing selected schedule slots in form of unix timestamps
 exports.schedule_post = async (req, res, next) => {
-    //TODO: validate fields of req to see if they exist and if they are array
+
     req.checkBody('days').exists();
     req.checkBody('days').isArray();
     req.checkBody('week').exists();
+    req.checkBody('week').notEmpty();
 
     const errors = req.validationErrors();
     if (errors) {
         res.render('admin/schedule', {
-            errors: errors
+            user: req.user,
+            title: 'Raspored',
+            error: 'Morate odabrati nekoliko termina',
         });
     }
 
     const db = firebaseAdmin.firestore();
     const scheduleReference = db.collection('schedule');
     const data = JSON.parse(JSON.stringify(req.body.days));
-    const week = req.body.week;
+    const week = String(req.body.week);
+
+
     try {
         const currentData = await scheduleReference.where('week', "==", week).limit(1).get();
         if (!currentData.empty) {
@@ -169,13 +176,45 @@ exports.schedule_post = async (req, res, next) => {
     const batchWrite = db.batch();
     data.forEach(timestamp => {
         docReference = scheduleReference.doc();
-        batchWrite.set(docReference, { time: timestamp, week: week });
+        batchWrite.set(docReference, { time: parseInt(timestamp, 10), week: week, taken: false, });
     });
 
     try {
         await batchWrite.commit();
         res.redirect('/administration');
     } catch (error) {
+        return next(error);
+    }
+}
+
+//rendering a page with current week requests
+exports.requests_by_week_get = async (req, res, next) => {
+    const db = firebaseAdmin.firestore();
+    const requestsReference = db.collection('requests');
+    const data = [];
+    const startOfWeek = moment().startOf('week').unix();
+    const endOfWeek = moment().endOf('week').unix();
+
+    try {
+        const snapshot = await requestsReference.where('time', '>=', startOfWeek).where('time', '<=', endOfWeek).get();
+        if (snapshot.empty) {
+            console.log('No data');
+        } else {
+            snapshot.docs.map(doc => {
+                let dataobject = doc.data();
+                dataobject.object_id = doc.id;
+                data.push(dataobject);
+            })
+        }
+        data.sort((a, b) => { return a.time - b.time });
+        res.render('admin/requests', {
+            user: req.user,
+            data: data,
+            title: 'Zahtjevi'
+        });
+
+    } catch (error) {
+        console.log(error);
         return next(error);
     }
 }

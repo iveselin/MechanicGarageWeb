@@ -26,4 +26,6 @@ router.route('/schedule')
   .get(administration_controller.schedule_get)
   .post(administration_controller.schedule_post);
 
+router.get('/week', administration_controller.requests_by_week_get);
+
 module.exports = router;
