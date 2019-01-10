@@ -11,7 +11,7 @@ mockUser.tasks = ['1', '2', '3'];
 
 describe('Test of workerController', () => {
 
-    test('Auth middleware - success', () => {
+     test('Auth middleware - success', () => {
         const isAuthenticated = jest.fn(() => true);
         const next = jest.fn();
         const res = jest.fn();
@@ -24,7 +24,7 @@ describe('Test of workerController', () => {
         expect(isAuthenticated).toBeCalled();
         expect(next).toBeCalled();
     });
-
+/*
     test('Auth middleware - fail', () => {
         const isAuthenticated = jest.fn(() => false)
         const redirect = jest.fn();
@@ -72,7 +72,7 @@ describe('Test of workerController', () => {
 
         expect(render.mock.calls).toHaveLength(1);
     })
-
+ */
 
 
 

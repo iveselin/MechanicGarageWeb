@@ -1,19 +1,20 @@
-var createError = require('http-errors');
-var express = require('express');
-var expressValidator = require('express-validator');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var passport = require('passport');
-var mongoose = require('mongoose');
-var LocalStrategy = require('passport-local').Strategy;
-var indexRouter = require('./routes/index');
-var adminRouter = require('./routes/admin');
-var workerRouter = require('./routes/worker');
-var firebaseAdmin = require('firebase-admin');
+const createError = require('http-errors');
+const express = require('express');
+const expressValidator = require('express-validator');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const passport = require('passport');
+const mongoose = require('mongoose');
+const LocalStrategy = require('passport-local').Strategy;
+const indexRouter = require('./routes/index');
+const adminRouter = require('./routes/admin');
+const workerRouter = require('./routes/worker');
+const firebaseAdmin = require('firebase-admin');
 
 
-var app = express();
+
+const app = express();
 app.use(expressValidator());
 
 app.locals.moment = require('moment');
@@ -29,7 +30,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-mongoose.connect('mongodb://iveselin:fanta99@ds139614.mlab.com:39614/garage_administration', { useNewUrlParser: true });
+if (process.env.NODE_ENV !== 'test') {
+  mongoose.connect('mongodb://iveselin:fanta99@ds139614.mlab.com:39614/garage_administration', { useNewUrlParser: true });
+}
 mongoose.Promise = global.Promise;
 
 app.use(require('express-session')({
@@ -43,13 +46,13 @@ app.use(require('express-session')({
 app.use(passport.initialize());
 app.use(passport.session());
 
-var User = require('./model/User');
+const User = require('./model/User');
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 //seting up firestore
-var serviceAccount = require('./model/firebase_cred.json');
+const serviceAccount = require('./model/firebase_cred.json');
 firebaseAdmin.initializeApp({
   credential: firebaseAdmin.credential.cert(serviceAccount),
   databaseURL: "https://mechanicgarage-6fdfa.firebaseio.com"

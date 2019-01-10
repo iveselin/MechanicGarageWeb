@@ -7,8 +7,9 @@ block content
 
             .col-sm-8.text-left
                 h4 Zadani posao:
+                br
                 each file, i in data
-                    a(href="/worker/tasks/"+file) Data nr. #{i}: #{file} 
+                    a.alert.alert-warning(href="/worker/tasks/"+file) Data nr. #{i}: #{file} 
                     hr  
                 else
                     h3 No data

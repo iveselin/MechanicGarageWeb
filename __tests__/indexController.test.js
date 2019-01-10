@@ -3,7 +3,7 @@ const passport = require('passport');
 
 describe('Test of indexController', () => {
 
-    test('Index route', () => {
+     test('Index route', () => {
         const render = jest.fn();
         const res = {
             render,
@@ -15,7 +15,7 @@ describe('Test of indexController', () => {
         expect(render.mock.calls[0][0]).toBe('index');
         expect(render.mock.calls[0][1]).toHaveProperty('title');
     });
-
+/*
     test('About route', () => {
         const render = jest.fn();
         const res = {
@@ -80,6 +80,6 @@ describe('Test of indexController', () => {
         expect(logout.mock.calls).toHaveLength(1);
         expect(redirect.mock.calls).toHaveLength(1);
         expect(redirect.mock.calls[0][0]).toBe('/index');
-    })
+    }) */
 })
 

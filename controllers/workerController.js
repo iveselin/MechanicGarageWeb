@@ -11,7 +11,7 @@ exports.auth_check = (req, res, next) => {
     }
 };
 
-//renders worker index with a list of assigned tasks
+//renders worker index with a list of assigned tasks------> TODO fetch tasks from firestore to check status
 exports.worker_index = (req, res, next) => {
     User.findById(req.user._id).exec()
         .then(user => {
