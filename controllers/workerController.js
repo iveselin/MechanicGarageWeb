@@ -20,7 +20,7 @@ exports.worker_index = (req, res, next) => {
         .catch(error => {
             return next(error);
         })
-}
+};
 
 //render task details of selected task
 exports.task_by_id_get = async (req, res, next) => {
@@ -48,7 +48,7 @@ exports.task_by_id_get = async (req, res, next) => {
     } catch (error) {
         return next(error);
     }
-}
+};
 
 //handle request to mark task as done -> remove from workers list and update in firestore
 exports.task_by_id_post = async (req, res, next) => {
@@ -71,4 +71,4 @@ exports.task_by_id_post = async (req, res, next) => {
     } catch (error) {
         return next(error);
     }
-}
+};

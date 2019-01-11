@@ -60,7 +60,7 @@ describe('Testing public routes in index router - with temp DB', () => {
         expect(response.header['location'].includes('/administration')).toBeTruthy();
     })
 
-    test('Login page - it should respond to POST - good credentials', async () => {
+    test('Login page - it should respond to POST - bad credentials', async () => {
         const response = await request(app).post('/login')
             .send({
                 username: 'wrong@email.hr',
