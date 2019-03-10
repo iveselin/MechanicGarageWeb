@@ -14,9 +14,11 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     block head
   body
-    nav.navbar.navbar-inverse.navbar-expand-md
-      button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarToggler', aria-controls='navbarToggler', aria-expanded='false', aria-label='Toggle navigation')
-        span.navbar-toggler-icon
+    nav.navbar.navbar-inverse.navbar-expand-lg
+      button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbarToggler', aria-controls='navbarToggler', aria-expanded='false', aria-label='Toggle navigation')
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
       #navbarToggler.collapse.navbar-collapse
         ul.nav.navbar-nav
           li

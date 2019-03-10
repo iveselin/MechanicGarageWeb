@@ -1,5 +1,6 @@
 const firebaseAdmin = require('firebase-admin');
 const User = require('../model/User');
+const moment = require('moment');
 
 //auth check middleware
 exports.auth_check = (req, res, next) => {
@@ -12,14 +13,37 @@ exports.auth_check = (req, res, next) => {
 };
 
 //renders worker index with a list of assigned tasks------> TODO fetch tasks from firestore to check status
-exports.worker_index = (req, res, next) => {
-    User.findById(req.user._id).exec()
-        .then(user => {
-            res.render('worker/index', { title: 'Assigned tasks', user: req.user, data: user.tasks });
-        })
-        .catch(error => {
-            return next(error);
-        })
+exports.worker_index = async (req, res, next) => {
+    const db = firebaseAdmin.firestore();
+    const requestsReference = db.collection('requests');
+    const data = [];
+    const id = req.user._id.toString();
+    const startOfWeek = moment().startOf('week').unix();
+
+    try {
+        const snapshot = await requestsReference.where('worker', '==', id).get();
+        if (snapshot.empty) {
+            console.log('No data');
+        } else {
+            snapshot.docs.map(doc => {
+                let dataobject = doc.data();
+                if (dataobject.time >= startOfWeek) {
+                    dataobject.object_id = doc.id;
+                    data.push(dataobject);
+                }
+            })
+        }
+        data.sort((a, b) => { return a.time - b.time });
+        res.render('worker/index', {
+            user: req.user,
+            data: data,
+            title: 'Dodijeljeni zahtjevi'
+        });
+
+    } catch (error) {
+        console.log(error);
+        return next(error);
+    }
 };
 
 //render task details of selected task
@@ -62,7 +86,7 @@ exports.task_by_id_post = async (req, res, next) => {
         const workerQ = User.findByIdAndUpdate(workerId, {
             $pull: { tasks: taskId }
         }).exec();
-        
+
         const requestQ = requestsReference.doc(taskId).update({ done: true });
 
         const results = [await workerQ, await requestQ];
