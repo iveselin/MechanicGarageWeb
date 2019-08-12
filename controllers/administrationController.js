@@ -14,7 +14,7 @@ exports.auth_check = (req, res, next) => {
 
 //administration homepage
 exports.admin_index = (req, res) => {
-    res.render('admin/admin', { title: 'Restricted Garage access', user: req.user });
+    res.redirect('/administration/requests');
 }
 
 //additional worker/admin registration page

@@ -4,9 +4,9 @@ block content
     .container-fluid.text-center
         .row.content
             .col-sm-5.text-left
-                h4 Work request:
+                h4 Zadatak:
                     p #{request.extraNote}
-                    p Work needed:
+                    p Potreban posao:
                         each data in request.requestType
                             p #{data}
                     if !request.worker
@@ -23,9 +23,9 @@ block content
                         hr
                         p.font-weight-bold Radnik dodijeljen
             .col-sm-5.text-left
-                h4 Car owner: #{client.name}
+                h4 Vlasnik: #{client.name}
                     p #{client.phone}
-                    p Car info:
+                    p Informacije o vozilu:
                         each data in client.car
                             p #{data}
             

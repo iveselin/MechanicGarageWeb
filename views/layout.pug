@@ -22,39 +22,39 @@ html
       #navbarToggler.collapse.navbar-collapse
         ul.nav.navbar-nav
           li
-            a(href="/index") Home 
+            a(href="/index") Početna
           li
-            a(href='/about') About
+            a(href='/about') O nama
           li
-            a(href='/contact') Contact
+            a(href='/contact') Kontakt
           if (user && user.role == "owner")
             li.dropdown
               a.dropdown-toggle(data-toggle='dropdown', href='#')
-                | Admin access
+                | Administrator
                 span.caret
               ul.dropdown-menu
                 li
-                  a(href='/administration/requests') Pending requests
+                  a(href='/administration/requests') Novi zahtjevi
                 li
-                  a(href='/administration/week') This week status
+                  a(href='/administration/week') Tjedni status
                 li
-                  a(href='/administration/register') Register new worker
+                  a(href='/administration/register') Registriraj novog radnika
                 li
                   a(href='/administration/schedule') Raspored
           if user
             li
-              a(href='/worker') Worker
+              a(href='/worker') Radnik
         ul.nav.navbar-nav.navbar-right
           if user
             li
               a(href="/logout")
                 span.glyphicon.glyphicon-log-out
-                |   Logout
+                |   Odjava
           else
             li
               a(href='/login')
                 span.glyphicon.glyphicon-log-in
-                |   Login 
+                |   Prijava 
 
     block content
 

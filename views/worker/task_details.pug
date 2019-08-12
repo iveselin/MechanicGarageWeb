@@ -4,9 +4,9 @@ block content
     .container-fluid.text-center
         .row.content
             .col-sm-5.text-left
-                h4 Work request:
+                h4 Zadatak:
                     p #{request.extraNote}
-                    p Work needed:
+                    p Potreban posao:
                         each data in request.requestType
                             p #{data}
                     form(method = 'POST', action='')
