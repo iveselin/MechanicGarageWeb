@@ -19,10 +19,6 @@ exports.about_get = (req, res) => {
     res.render('about', { title: 'Basic info', user: req.user });
 };
 
-exports.contact_get = (req, res) => {
-    res.render('contact', { title: 'Contact info', user: req.user });
-};
-
 exports.logout_get = (req, res) => {
     req.logout();
     res.redirect('/index');

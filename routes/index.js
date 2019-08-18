@@ -12,8 +12,6 @@ router.route('/login')
 
 router.get('/about', index_controller.about_get);
 
-router.get('/contact', index_controller.contact_get);
-
 //logout request handling
 router.get('/logout', index_controller.logout_get);
 

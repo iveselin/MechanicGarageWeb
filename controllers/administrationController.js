@@ -69,7 +69,7 @@ exports.requests_get = async (req, res, next) => {
         res.render('admin/requests', {
             user: req.user,
             data: data,
-            title: 'Zahtjevi'
+            title: 'Zahtjevi na čekanju'
         });
 
     } catch (error) {
@@ -210,7 +210,7 @@ exports.requests_by_week_get = async (req, res, next) => {
         res.render('admin/requests', {
             user: req.user,
             data: data,
-            title: 'Zahtjevi'
+            title: 'Ovotjedni zahtjevi'
         });
 
     } catch (error) {
