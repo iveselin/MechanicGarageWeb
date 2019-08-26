@@ -1,0 +1,38 @@
+extends layout
+
+block content
+    .container-fluid.text-center
+        .row.content
+            include includes/left_sidebar
+
+            .col-sm-8.text-left
+                h1 Nudimo usluge:
+                hr
+                h3
+                    ul.container.details
+                        li
+                            p
+                            span.one(style='width:50px;')
+                            | Osnovni servis vozila
+                        li
+                            p
+                            span.one(style='width:50px;')
+                            | Auto dijagnostika i popravci
+                        li
+                            p
+                            span.one(style='width:50px;')
+                            | Vulkanizer
+                        li
+                            p
+                            span.one(style='width:50px;')
+                            | Servis auspuha
+                        li
+                            p
+                            span.one(style='width:50px;')
+                            | i još mnogo toga
+
+            .col-sm-2.sidenav
+                .well
+                    p ADS
+                .well
+                    p ADS

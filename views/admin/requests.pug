@@ -1,0 +1,23 @@
+extends ../layout
+
+block content 
+    .container-fluid.text-center
+        .row.content
+            include ../includes/left_sidebar
+
+            .col-sm-8.text-left
+                h4 #{title}:
+                br
+                each file, i in data
+                    if file.done
+                        a.alert.alert-success(href="/administration/requests/"+file.object_id) #{i+1}. #{moment(file.time*1000).format('DD.MM.YYYY  HH:mm')}
+                    else if !file.worker  
+                        a.alert.alert-danger(href="/administration/requests/"+file.object_id) #{i+1}. #{moment(file.time*1000).format('DD.MM.YYYY  HH:mm')} 
+                    else
+                        a.alert.alert-warning(href="/administration/requests/"+file.object_id)  #{i+1}. #{moment(file.time*1000).format('DD.MM.YYYY  HH:mm')}
+                    hr  
+                else
+                    h3 Nema podataka
+                    
+            include ../includes/right_sidebar
+        

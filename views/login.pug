@@ -1,0 +1,25 @@
+extends layout
+
+block content
+
+    .jumbotron.jumbotron-fluid
+        .container
+            h2 Prijava u sustav
+            p Za administriranje poslova potrebna je prijava u sustav.
+    .container            
+      .container
+        form.form-horizontal(method='POST' action='/login')
+            .form-group.row
+                .col-sm-2
+                    label.label-text Email
+                .col-sm-6
+                    input.form-control.form-control-sm(type='email', name='username', placeholder='Email', required='')
+            .form-group.row
+                .col-sm-2
+                    label.label-text Lozinka
+                .col-sm-6
+                    input#password.form-control.form-control-sm-6(type='password', name='password', placeholder='Lozinka', required='')
+            .form-group.row
+                .col-sm-2
+                .col-sm-6
+                    button.btn.btn-info(type='submit') Prijava

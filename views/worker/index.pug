@@ -1,0 +1,23 @@
+extends ../layout
+
+block content 
+    .container-fluid.text-center
+        .row.content
+            include ../includes/left_sidebar
+
+            .col-sm-8.text-left
+                h4 Zadani posao:
+                br
+                each file, i in data
+                    if file.done
+                        a.alert.alert-success(href="/worker/tasks/"+file.object_id) #{i+1}. #{moment(file.time*1000).format('DD.MM.YYYY  HH:mm')}
+                    else if !file.worker  
+                        a.alert.alert-danger(href="/worker/tasks/"+file.object_id) #{i+1}. #{moment(file.time*1000).format('DD.MM.YYYY  HH:mm')} 
+                    else
+                        a.alert.alert-warning(href="/worker/tasks/"+file.object_id)  #{i+1}. #{moment(file.time*1000).format('DD.MM.YYYY  HH:mm')}
+                    hr  
+                else
+                    h3 No data
+                    
+            include ../includes/right_sidebar
+        

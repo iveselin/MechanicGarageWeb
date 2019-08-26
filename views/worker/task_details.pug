@@ -1,0 +1,21 @@
+extends ../layout
+
+block content 
+    .container-fluid.text-center
+        .row.content
+            .col-sm-5.text-left
+                h4 Zadatak:
+                    p #{request.extraNote}
+                    p Potreban posao:
+                        each data in request.requestType
+                            p #{data}
+                    form(method = 'POST', action='')
+                        .form-group
+                            button.btn.btn-info(type = 'submit') Rijeseno       
+            .col-sm-5.text-left
+                h4 Car owner: #{client.name}
+                    p #{client.phone}
+                    p Car info:
+                        each data in client.car
+                            p #{data}
+            
